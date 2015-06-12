@@ -21,8 +21,8 @@ class AlsaReader : public Thread
 	protected:
 		virtual void run();
 	public:
-		AlsaReader(Pool<short *> * pool, string id, Mutex &mtx)
-			: pool(pool), id(id), num_items(0), mtx(mtx) {}
+		AlsaReader(Pool<short *> * pool, string id)
+			: pool(pool), id(id), num_items(0) {}
 		void read(size_t);
 };
 

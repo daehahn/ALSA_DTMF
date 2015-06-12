@@ -15,11 +15,10 @@ int main(void)
         //Common::log();
 
  	Pool<short*> pool;
-        Mutex mtx;
 	//Reader prod(&pool, "Alsa Reader 1");
-	AlsaReader prod1(&pool, "Alsa reader 2", mtx);
+	AlsaReader prod1(&pool, "Alsa reader 2");
 	//Detector cons0(&pool, "Freq Detector 0");
-	AlsaWriter cons1(&pool, "Alsa Writer 0", mtx);
+	AlsaWriter cons1(&pool, "Alsa Writer 0");
 
 	//cons0.detect(2);
         cons1.write(100);

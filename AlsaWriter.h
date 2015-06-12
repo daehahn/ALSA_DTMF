@@ -17,12 +17,11 @@ class AlsaWriter : public Thread
                 snd_pcm_t *handle;
                 void alsa_setup(const char *device, unsigned int *sample_rate);
 		unsigned int sample_rate;
-                Mutex &mtx;
 	protected:
 		virtual void run();
 	public:
-		AlsaWriter(Pool<short *> * pool, string id, Mutex &mtx)
-			: pool(pool), id(id), num_items(0), mtx(mtx) {}
+		AlsaWriter(Pool<short *> * pool, string id)
+			: pool(pool), id(id), num_items(0) {}
 		void write(size_t);
 };
 

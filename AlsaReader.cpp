@@ -22,9 +22,7 @@ void AlsaReader::run()
 	for (size_t i = 0; i < num_items; ++i)
 	{
 		short * data = new short[TONE_BUFFER_SIZE];
-                mtx.lock();
                 rc = snd_pcm_readi(handle,data,TONE_BUFFER_SIZE/CHANNELS);
-                mtx.unlock();
 		if(rc != -EPIPE){
 			pool->push(data);
 		}
