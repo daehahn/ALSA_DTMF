@@ -20,14 +20,17 @@ Reader.o: Reader.cpp Reader.h Common.h Thread.h Pool.h Mutex.h
 AlsaReader.o: AlsaReader.cpp AlsaReader.h Common.h Thread.h Pool.h Mutex.h
 	$(COMPILE) AlsaReader.cpp -o AlsaReader.o
 
+AlsaWriter.o: AlsaWriter.cpp AlsaWriter.h Common.h Thread.h Pool.h Mutex.h
+	$(COMPILE) AlsaWriter.cpp -o AlsaWriter.o
+
 Detector.o: Detector.cpp Detector.h Common.h Thread.h Pool.h Mutex.h
 	$(COMPILE) Detector.cpp -o Detector.o
 
 main.o: main.cpp Pool.h Reader.h Detector.h Mutex.h Thread.h
 	$(COMPILE) main.cpp -o main.o
 
-main: Thread.o Mutex.o Common.o Reader.o AlsaReader.o Detector.o main.o
-	$(LINK) main.o Thread.o Mutex.o Common.o Reader.o AlsaReader.o Detector.o $(LIBS) -o main
+main: Thread.o Mutex.o Common.o Reader.o AlsaReader.o AlsaWriter.o Detector.o main.o
+	$(LINK) main.o Thread.o Mutex.o Common.o Reader.o AlsaReader.o AlsaWriter.o Detector.o $(LIBS) -o main
 
 clean : 
 	rm -f main *.o *~

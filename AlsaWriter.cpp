@@ -1,11 +1,11 @@
-#include "AlsaReader.h"
+#include "AlsaWriter.h"
 #include <unistd.h>
 #include <iostream>
 #include <cstring>
 
 using namespace std;
 
-void AlsaReader::read(size_t num_items)
+void AlsaWriter::write(size_t num_items)
 {
 	if (!pool) return;
 	if (num_items <= 0) return;
@@ -15,25 +15,27 @@ void AlsaReader::read(size_t num_items)
 	start();
 }
 
-void AlsaReader::run()
+void AlsaWriter::run()
 {
 	int rc;
 	if (!pool) return;
 	for (size_t i = 0; i < num_items; ++i)
 	{
-		short * data = new short[TONE_BUFFER_SIZE];
-                rc = snd_pcm_readi(handle,data,TONE_BUFFER_SIZE/CHANNELS);
-		if(rc != -EPIPE){
-			pool->push(data);
+		short *data = pool->pop();
+                rc = snd_pcm_writei(handle,data,TONE_BUFFER_SIZE/CHANNELS);
+		//fwrite((char*)data, sizeof(short), TONE_BUFFER_SIZE, stdout);
+		if(rc == -EPIPE){
+			snd_pcm_prepare(handle);
 		}
 	}
+        sleep(2);
 }
 
-void AlsaReader::alsa_setup(const char *device,  unsigned int *sample_rate){
+void AlsaWriter::alsa_setup(const char *device,  unsigned int *sample_rate){
   int err;
   snd_pcm_hw_params_t *hw_params;
 
-  if ((err = snd_pcm_open (&handle, device, SND_PCM_STREAM_CAPTURE, 0)) < 0) {
+  if ((err = snd_pcm_open (&handle, device, SND_PCM_STREAM_PLAYBACK, 0)) < 0) {
     fprintf (stderr, "cannot open audio device %s (%s)\n",
                      device,
                      snd_strerror (err));
