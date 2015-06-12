@@ -11,7 +11,7 @@ void AlsaReader::read(size_t num_items)
 	if (num_items <= 0) return;
 	this->num_items = num_items;
 	sample_rate = SAMPLE_RATE;
-	alsa_setup("hw:1,0",&sample_rate);
+	alsa_setup("default",&sample_rate);
 	start();
 }
 
@@ -22,7 +22,9 @@ void AlsaReader::run()
 	for (size_t i = 0; i < num_items; ++i)
 	{
 		short * data = new short[TONE_BUFFER_SIZE];
+                mtx.lock();
                 rc = snd_pcm_readi(handle,data,TONE_BUFFER_SIZE/CHANNELS);
+                mtx.unlock();
 		if(rc != -EPIPE){
 			pool->push(data);
 		}

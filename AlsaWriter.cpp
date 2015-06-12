@@ -11,7 +11,7 @@ void AlsaWriter::write(size_t num_items)
 	if (num_items <= 0) return;
 	this->num_items = num_items;
 	sample_rate = SAMPLE_RATE;
-	alsa_setup("hw:1,0",&sample_rate);
+	alsa_setup("default",&sample_rate);
 	start();
 }
 
@@ -22,7 +22,9 @@ void AlsaWriter::run()
 	for (size_t i = 0; i < num_items; ++i)
 	{
 		short *data = pool->pop();
+		mtx.lock();
                 rc = snd_pcm_writei(handle,data,TONE_BUFFER_SIZE/CHANNELS);
+		mtx.unlock();
 		//fwrite((char*)data, sizeof(short), TONE_BUFFER_SIZE, stdout);
 		if(rc == -EPIPE){
 			snd_pcm_prepare(handle);

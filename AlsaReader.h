@@ -17,11 +17,12 @@ class AlsaReader : public Thread
                 snd_pcm_t *handle;
                 void alsa_setup(const char *device, unsigned int *sample_rate);
 		unsigned int sample_rate;
+                Mutex &mtx;
 	protected:
 		virtual void run();
 	public:
-		AlsaReader(Pool<short *> * pool, string id)
-			: pool(pool), id(id), num_items(0) {}
+		AlsaReader(Pool<short *> * pool, string id, Mutex &mtx)
+			: pool(pool), id(id), num_items(0), mtx(mtx) {}
 		void read(size_t);
 };
 
