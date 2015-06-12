@@ -45,7 +45,7 @@ void Detector::run()
               mag[i+4] = goertzel(buf, Common::coef_high[i], 
 					index, FILTER_WIDTH);
 	      mtx.lock();
-              cout << ", " << mag[i];
+              cout << ", " << mag[i+4];
               mtx.unlock();
             }
 
