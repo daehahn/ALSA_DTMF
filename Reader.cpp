@@ -18,10 +18,14 @@ void Reader::run()
 	if (!pool) return;
 	for (size_t i = 0; i < num_items; ++i)
 	{
-                short stack_data[4] = {i, i, i, i};
-		short * data = new short[4];
 
-		memcpy(data, &stack_data[0], sizeof(short) * 4);
+		short * data = new short[TONE_BUFFER_SIZE];
+
+                Common::copy_tone_buffer(1, 1, data);
+		for(int i = NUM_MARK_SAMPLES * CHANNELS; 
+					i < TONE_BUFFER_SIZE; i++) {
+                  data[i] = 0;
+                }
 
 		pool->push(data);
 		usleep(100);

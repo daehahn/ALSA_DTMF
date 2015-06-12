@@ -1,6 +1,7 @@
 #ifndef __READER_H__
 #define __READER_H__
 
+#include "Common.h"
 #include "Thread.h"
 #include "Pool.h"
 #include <string>

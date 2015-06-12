@@ -1,18 +1,23 @@
+#include "Common.h"
 #include "Pool.h"
 #include "Reader.h"
 #include "Detector.h"
 #include <string>
+#include <iostream>
 
 using namespace std;
 
 int main(void)
 {
-	Pool<short*> pool;
+        Common::init();
+        //Common::log();
+
+ 	Pool<short*> pool;
 	Reader prod(&pool, "Alsa Reader 1");
 	Detector cons0(&pool, "Freq Detector 0");
 
-	cons0.detect(10);
-	prod.read(10);	
+	cons0.detect(2);
+	prod.read(2);	
 
 	prod.join();
 	cons0.join();
