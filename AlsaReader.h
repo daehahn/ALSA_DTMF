@@ -17,7 +17,6 @@ class AlsaReader : public Thread
                 snd_pcm_t *handle;
                 void alsa_setup(const char *device, unsigned int *sample_rate);
 		unsigned int sample_rate;
-                Mutex &mtx;
 	protected:
 		virtual void run();
 	public:

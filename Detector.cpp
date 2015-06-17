@@ -74,7 +74,7 @@ double Detector::goertzel(TwoBuffer &buf, double coef, int x, int length) {
   double q0, q1, q2;
   q0 = q1 = q2 = 0;
 
-  double scale = length / 2.0;
+  double scale = length;
 
   for(int i = x; i < x + length; i++) {
     q0 = buf.get(i*CHANNELS) + (coef * q1) - q2;

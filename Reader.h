@@ -4,6 +4,7 @@
 #include "Common.h"
 #include "Thread.h"
 #include "Pool.h"
+#include <iostream>
 #include <string>
 
 using namespace std;

@@ -18,16 +18,29 @@ void Reader::run()
 	if (!pool) return;
 	for (size_t i = 0; i < num_items; ++i)
 	{
-
+		char input;
+		cin >> input;
+		char first_half = (input & 0xF0) >> 4;
+		char second_half = (input & 0x0F);
+		
 		short * data = new short[TONE_BUFFER_SIZE];
-
-                Common::copy_tone_buffer(1, 1, data);
+		
+                Common::copy_tone_buffer((first_half/4)%4, first_half%4, data);
 		for(int i = NUM_MARK_SAMPLES * CHANNELS; 
 					i < TONE_BUFFER_SIZE; i++) {
                   data[i] = 0;
                 }
 
 		pool->push(data);
-		usleep(100);
+
+                data = new short[TONE_BUFFER_SIZE];
+
+                Common::copy_tone_buffer((second_half/4)%4, second_half%4, data);
+		for(int i = NUM_MARK_SAMPLES * CHANNELS; 
+					i < TONE_BUFFER_SIZE; i++) {
+                  data[i] = 0;
+                }
+
+		pool->push(data);
 	}
 }

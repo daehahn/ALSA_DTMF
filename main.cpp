@@ -15,16 +15,16 @@ int main(void)
         //Common::log();
 
  	Pool<short*> pool;
-	//Reader prod(&pool, "Alsa Reader 1");
-	AlsaReader prod1(&pool, "Alsa reader 2");
+	Reader prod(&pool, "Alsa Reader 1");
+	//AlsaReader prod1(&pool, "Alsa reader 2");
 	//Detector cons0(&pool, "Freq Detector 0");
 	AlsaWriter cons1(&pool, "Alsa Writer 0");
 
-	//cons0.detect(2);
-        cons1.write(100);
-	prod1.read(100);	
+	//cons0.detect(55);
+        cons1.write(55);
+	prod.read(55);	
 
-	prod1.join();
+	prod.join();
 	//cons0.join();
 	cons1.join();
 	

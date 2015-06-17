@@ -9,11 +9,11 @@
 #define HIGHER_AMP 		10000
 #define CHANNELS 		2
 #define FRAME_SIZE 		(sizeof(short) * CHANNELS)
-#define MARK 			100
-#define SPACE 			100
+#define MARK 			40
+#define SPACE 			40
 #define NUM_MARK_SAMPLES 	((int)((MARK / 1000.0) * SAMPLE_RATE))
 #define NUM_SPACE_SAMPLES 	((int)((SPACE / 1000.0) * SAMPLE_RATE))
-#define FILTER_WIDTH 		(NUM_MARK_SAMPLES >> 2)
+#define FILTER_WIDTH 		(NUM_MARK_SAMPLES >> 3)
 #define FILTER_STRIDE 		(FILTER_WIDTH >> 1)
 #define TONE_BUFFER_SIZE 	((NUM_MARK_SAMPLES + NUM_SPACE_SAMPLES) * CHANNELS)
 #define CODE_TO_CHAR(A, B)	((char)(((A) << 1) | (((B) << 1) << 4)))
