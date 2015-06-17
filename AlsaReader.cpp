@@ -5,7 +5,7 @@
 
 using namespace std;
 
-void AlsaReader::read(size_t num_items)
+void AlsaReader::execute(size_t num_items)
 {
 	if (!pool) return;
 	if (num_items <= 0) return;

@@ -4,11 +4,12 @@
 #include "Thread.h"
 #include "Pool.h"
 #include "Common.h"
+#include "ModuleBase.h"
 #include <string>
 #include <alsa/asoundlib.h>
 using namespace std;
 
-class AlsaWriter : public Thread
+class AlsaWriter : public ModuleBase
 {
 	private:
 		Pool<short*> * pool;
@@ -22,7 +23,7 @@ class AlsaWriter : public Thread
 	public:
 		AlsaWriter(Pool<short *> * pool, string id)
 			: pool(pool), id(id), num_items(0) {}
-		void write(size_t);
+		void execute(size_t);
 };
 
 #endif

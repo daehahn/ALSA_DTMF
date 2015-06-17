@@ -4,6 +4,7 @@
 #include "Common.h"
 #include "Thread.h"
 #include "Pool.h"
+#include "ModuleBase.h"
 #include <string>
 
 using namespace std;
@@ -42,7 +43,7 @@ private:
   int lb;
 };
 
-class Detector : public Thread
+class Detector : public ModuleBase
 {
 	private:
 		static Mutex mtx;
@@ -54,7 +55,7 @@ class Detector : public Thread
 	public:
 		Detector(Pool<short*> * pool, string id)
 			: pool(pool), id(id), num_items(0) {}
-		void detect(size_t);
+		void execute(size_t);
 		double goertzel(TwoBuffer &buf, double coef, 
 						int x, int length);
 

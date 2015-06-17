@@ -5,7 +5,7 @@ using namespace std;
 
 Mutex Detector::mtx;
 
-void Detector::detect(size_t num_items)
+void Detector::execute(size_t num_items)
 {
 	if (!pool) return;
 	if (num_items <= 0) return;

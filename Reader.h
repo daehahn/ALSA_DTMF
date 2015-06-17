@@ -4,12 +4,13 @@
 #include "Common.h"
 #include "Thread.h"
 #include "Pool.h"
+#include "ModuleBase.h"
 #include <iostream>
 #include <string>
 
 using namespace std;
 
-class Reader : public Thread
+class Reader : public ModuleBase
 {
 	private:
 		Pool<short*> * pool;
@@ -20,7 +21,7 @@ class Reader : public Thread
 	public:
 		Reader(Pool<short *> * pool, string id)
 			: pool(pool), id(id), num_items(0) {}
-		void read(size_t);
+		void execute(size_t);
 };
 
 #endif

@@ -5,7 +5,7 @@
 
 using namespace std;
 
-void AlsaWriter::write(size_t num_items)
+void AlsaWriter::execute(size_t num_items)
 {
 	if (!pool) return;
 	if (num_items <= 0) return;
@@ -28,7 +28,7 @@ void AlsaWriter::run()
 			snd_pcm_prepare(handle);
 		}
 	}
-        sleep(2);
+  sleep(4444);
 }
 
 void AlsaWriter::alsa_setup(const char *device,  unsigned int *sample_rate){
