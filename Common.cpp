@@ -25,16 +25,18 @@ void Common::generate_tone_buffer() {
       double f1 = lower_freq[i];
       double f2 = higher_freq[j];
 
-      int k, x;
+      int k, x, l;
 
-      for(k = 0, x = 0; k < NUM_MARK_SAMPLES * CHANNELS; k += 2, x++) {
+      for(k = 0, x = 0; k < NUM_MARK_SAMPLES * CHANNELS; k += CHANNELS, x++) {
         tone_buffer[i][j][k] =
           (short)(LOWER_AMP * sin(2 * M_PI * ((x * f1) / SAMPLE_RATE)));
 
         tone_buffer[i][j][k] +=
           (short)(HIGHER_AMP * sin(2 * M_PI * ((x * f2) / SAMPLE_RATE)));
 
-        tone_buffer[i][j][k+1] = tone_buffer[i][j][k];
+        for(l = k + 1; l < k + CHANNELS; l++) {
+          tone_buffer[i][j][l] = tone_buffer[i][j][k];
+        }
       }
 
     }
