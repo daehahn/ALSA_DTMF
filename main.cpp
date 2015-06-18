@@ -22,6 +22,19 @@ int main(int argc, char ** argv)
   ModuleBase *consumer = NULL;
  	Pool<short*> pool;
 
+/*options:
+  -i select input mode: (default is Reader)
+     a -> AlsaReader
+     r -> Reader
+  -o select output mode: (default is Detector)
+     a -> AlsaWriter
+     d -> Detector
+     f -> FileWriter
+  -n specify number of items to process (default is 16)
+  -f specify file name (for fileWriter, not implemented yet)
+*/
+
+
   while((c = getopt(argc,argv,OPTS)) != -1){
     switch(c){
       case 'i':
