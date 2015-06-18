@@ -28,7 +28,7 @@ void AlsaWriter::run()
 			snd_pcm_prepare(handle);
 		}
 	}
-  sleep(4444);
+  sleep(4);
 }
 
 void AlsaWriter::alsa_setup(const char *device,  unsigned int *sample_rate){

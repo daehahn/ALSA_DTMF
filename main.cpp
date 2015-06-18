@@ -18,16 +18,16 @@ int main(int argc, char ** argv)
   char c;
   Common::init();
   //Common::log();
-  ModuleBase *producer;
-  ModuleBase *consumer;
+  ModuleBase *producer = NULL;
+  ModuleBase *consumer = NULL;
  	Pool<short*> pool;
 
   while((c = getopt(argc,argv,OPTS)) != -1){
     switch(c){
       case 'i':
-        if(optarg[0] == 'a'){
+        if(!strcmp(optarg,"a")){
           producer = new AlsaReader(&pool,"Alsa Reader");
-        }else if(optarg[0] == 'r'){
+        }else if(!strcmp(optarg,"r")){
           producer = new Reader(&pool,"Reader");
         }else{
           fprintf(stderr,"bad input option argument: %s\n",optarg);
@@ -35,11 +35,11 @@ int main(int argc, char ** argv)
         }
         break;
       case 'o':
-        if(optarg[0] == 'a'){
+        if(!strcmp(optarg,"a")){
           consumer = new AlsaWriter(&pool,"Alsa Writer");
-        }else if(optarg[0] == 'd'){
+        }else if(!strcmp(optarg,"d")){
           consumer = new Detector(&pool,"Freq Detector");
-        }else if(optarg[0] == 'f'){
+        }else if(!strcmp(optarg,"f")){
 //          consumer = new FileWriter(&pool,"File Writer");
         }else{
           fprintf(stderr,"invalid output option argument: %s\n",optarg);
@@ -54,6 +54,9 @@ int main(int argc, char ** argv)
         break;
     }
   }
+
+  if(producer == NULL) producer = new Reader(&pool,"Default Reader");
+  if(consumer == NULL) consumer = new Detector(&pool,"Detector");
 
 	//Reader prod(&pool, "Alsa Reader 1");
 	//AlsaReader prod1(&pool, "Alsa reader 2");
