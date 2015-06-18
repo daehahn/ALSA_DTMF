@@ -3,7 +3,7 @@
 
 using namespace std;
 
-void FileWriter::write(size_t num_items)
+void FileWriter::execute(size_t num_items)
 {
 	if (!pool) return;
 	if (num_items <= 0) return;

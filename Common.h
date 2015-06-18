@@ -5,8 +5,8 @@
 
 #define PI_2 			(2 * M_PI)
 #define SAMPLE_RATE 		48000
-#define LOWER_AMP  		12000
-#define HIGHER_AMP 		14000
+#define LOWER_AMP  		15000
+#define HIGHER_AMP 		15000
 #define CHANNELS 		1
 #define FRAME_SIZE 		(sizeof(short) * CHANNELS)
 #define MARK 			100

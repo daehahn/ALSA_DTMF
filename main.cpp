@@ -3,6 +3,7 @@
 #include "AlsaReader.h"
 #include "Reader.h"
 #include "AlsaWriter.h"
+#include "FileWriter.h"
 #include "Detector.h"
 #include <stdlib.h>
 #include <string>
@@ -53,7 +54,7 @@ int main(int argc, char ** argv)
         }else if(!strcmp(optarg,"d")){
           consumer = new Detector(&pool,"Freq Detector");
         }else if(!strcmp(optarg,"f")){
-//          consumer = new FileWriter(&pool,"File Writer");
+          consumer = new FileWriter(&pool,"File Writer", "data.raw");
         }else{
           fprintf(stderr,"invalid output option argument: %s\n",optarg);
           exit(EXIT_FAILURE);
