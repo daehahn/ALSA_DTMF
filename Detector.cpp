@@ -5,7 +5,7 @@ using namespace std;
 
 Mutex Detector::mtx;
 
-void Detector::execute(size_t num_items)
+void Detector::detect(size_t num_items)
 {
 	if (!pool) return;
 	if (num_items <= 0) return;
@@ -53,7 +53,7 @@ void Detector::run()
             cout << endl;
             mtx.unlock();
 
-	    index += FILTER_STRIDE;
+	    index += (FILTER_STRIDE * CHANNELS);
 	    
           }
 
@@ -74,10 +74,10 @@ double Detector::goertzel(TwoBuffer &buf, double coef, int x, int length) {
   double q0, q1, q2;
   q0 = q1 = q2 = 0;
 
-  double scale = length;
+  double scale = length / 2.0;
 
   for(int i = x; i < x + length; i++) {
-    q0 = buf.get(i*CHANNELS) + (coef * q1) - q2;
+    q0 = (buf.get(i*CHANNELS) / 32767.0) + (coef * q1) - q2;
     q2 = q1;
     q1 = q0;
   }
