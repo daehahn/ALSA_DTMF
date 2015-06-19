@@ -11,8 +11,10 @@
 #define SPACE 			100
 #define NUM_MARK_SAMPLES 	((int)((MARK / 1000.0) * SAMPLE_RATE))
 #define NUM_SPACE_SAMPLES 	((int)((SPACE / 1000.0) * SAMPLE_RATE))
-#define FILTER_WIDTH 		(NUM_MARK_SAMPLES >> 2)
+#define FILTER_WIDTH 		(NUM_MARK_SAMPLES >> 1)
 #define FILTER_STRIDE 		(FILTER_WIDTH >> 1)
+#define ON_SAMPLES		5
+#define ON_THRESHOLD		((ON_SAMPLES * 0.15))
 #define TONE_BUFFER_SIZE 	((NUM_MARK_SAMPLES + NUM_SPACE_SAMPLES) * CHANNELS)
 #define CODE_TO_CHAR(A, B)	((char)(((A) << 1) | (((B) << 1) << 4)))
 

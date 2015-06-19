@@ -1,2 +1,6 @@
 *.o
 main
+data.*
+.*.swp
+.*.swo
+.*.swn
