@@ -113,9 +113,9 @@ void Detector::run()
 		 (dmag[i][before]  > 0.0001 && dmag[i][two_after] < -0.0001) ||
 		 (dmag[i][two_before]  > 0.0001 && dmag[i][after] < -0.0001)) {
 		low_index.push_back(i);
-		//cout << (i == 0 ? "" : ", ") << 1;
+		cout << (i == 0 ? "" : ", ") << 1;
               } else {
-                //cout << (i == 0 ? "" : ", ") << 0;
+                cout << (i == 0 ? "" : ", ") << 0;
               }
             }
 
@@ -124,9 +124,9 @@ void Detector::run()
 		 (dmag[i][before]  > 0.0001 && dmag[i][two_after] < -0.0001) ||
 		 (dmag[i][two_before]  > 0.0001 && dmag[i][after] < -0.0001)) {
 		high_index.push_back(i-4);
-                //cout << ", " << 1;
+                cout << ", " << 1;
               } else {
-                //cout << ", " << 0;
+                cout << ", " << 0;
               }
             }
 /*
@@ -143,18 +143,21 @@ void Detector::run()
             } 
 */
 
-            //cout << endl;
+            cout << endl;
 
             if(low_index.size() == 1 && high_index.size() == 1) {
+              //printf("off_count: %d\n", off_count);
+              //printf("on\n");
               if(off_count >= ON_SAMPLES) {
                 mtx.lock();
                 unsigned char c = (unsigned char)(4*low_index[0] + high_index[0]);
                 message.push_back(c);
-                cout << "Detected " << Common::code_to_char[CODE_TO_CHAR(low_index[0], high_index[0])] << endl;
+                //cout << "Detected " << Common::code_to_char[CODE_TO_CHAR(low_index[0], high_index[0])] << endl;
                 mtx.unlock();
               }
               off_count = 0;
             } else {
+              //printf("off\n");
               off_count++;
             }
 
@@ -163,6 +166,7 @@ void Detector::run()
             mtx.unlock();
 
 	    index += (FILTER_STRIDE * CHANNELS);
+            //printf("index: %d\n", index);
             //for(int i = 0; i < 8; i++) {
               //sum[i] -= mag[i][(mag_index+1)%ON_SAMPLES];
             //}
