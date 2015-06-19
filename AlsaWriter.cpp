@@ -23,6 +23,7 @@ void AlsaWriter::run()
 	{
 		short *data = pool->pop();
                 rc = snd_pcm_writei(handle,data,TONE_BUFFER_SIZE/CHANNELS);
+                delete [] data;
 		//fwrite((char*)data, sizeof(short), TONE_BUFFER_SIZE, stdout);
 		if(rc == -EPIPE){
 			snd_pcm_prepare(handle);

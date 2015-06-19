@@ -17,6 +17,9 @@ double Common::theta_higher[4];
 double Common::coef_low[4];
 double Common::coef_high[4];
 
+double Common::amp_low[4];
+double Common::amp_high[4];
+
 void Common::generate_tone_buffer() {
 
   for(int i = 0; i < 4; i++) {
@@ -29,10 +32,10 @@ void Common::generate_tone_buffer() {
 
       for(k = 0, x = 0; k < NUM_MARK_SAMPLES * CHANNELS; k += CHANNELS, x++) {
         tone_buffer[i][j][k] =
-          (short)(LOWER_AMP * sin(2 * M_PI * ((x * f1) / SAMPLE_RATE)));
+          (short)(amp_low[i] * sin(2 * M_PI * ((x * f1) / SAMPLE_RATE)));
 
         tone_buffer[i][j][k] +=
-          (short)(HIGHER_AMP * sin(2 * M_PI * ((x * f2) / SAMPLE_RATE)));
+          (short)(amp_high[j] * sin(2 * M_PI * ((x * f2) / SAMPLE_RATE)));
 
         for(l = k + 1; l < k + CHANNELS; l++) {
           tone_buffer[i][j][l] = tone_buffer[i][j][k];
@@ -99,7 +102,7 @@ void Common::init() {
   code_to_char[CODE_TO_CHAR(3, 1)] = '0';
   code_to_char[CODE_TO_CHAR(3, 2)] = '#';
   code_to_char[CODE_TO_CHAR(3, 3)] = 'D';
-
+/*
   lower_freq[0] = 697;
   lower_freq[1] = 770;
   lower_freq[2] = 852;
@@ -109,6 +112,37 @@ void Common::init() {
   higher_freq[1] = 1336;
   higher_freq[2] = 1477;
   higher_freq[3] = 1633;
+  */
+  lower_freq[0] = 16000;
+  lower_freq[1] = 16500;
+  lower_freq[2] = 17000;
+  lower_freq[3] = 17500;
+
+  higher_freq[0] = 18000;
+  higher_freq[1] = 18500;
+  higher_freq[2] = 19000;
+  higher_freq[3] = 19500;
+
+/*
+  amp_low[0] = 2200;
+  amp_low[1] = 6500;
+  amp_low[2] = 7000;
+  amp_low[3] = 15000;
+  
+  amp_high[0] = 8500;
+  amp_high[1] = 14500;
+  amp_high[2] = 15700;
+  amp_high[3] = 16000;
+*/
+  amp_low[0] = 15000;
+  amp_low[1] = 15000;
+  amp_low[2] = 15000;
+  amp_low[3] = 15000;
+  
+  amp_high[0] = 15000;
+  amp_high[1] = 15000;
+  amp_high[2] = 15000;
+  amp_high[3] = 15000;
 
   for(int i = 0; i < 4; i++) {
     theta_lower[i]  = (PI_2 / SAMPLE_RATE) *  lower_freq[i];
@@ -124,8 +158,6 @@ void Common::log() {
   cout << endl;
   cout << "Common Parameters-------------------------------" << endl;
   cout << "  SAMPLE_RATE       : " << SAMPLE_RATE << endl;
-  cout << "  LOWER_AMP         : " << LOWER_AMP << endl;
-  cout << "  HIGHER_AMP        : " << HIGHER_AMP << endl;
   cout << "  CHANNELS          : " << CHANNELS << endl;
   cout << "  FRAME_SIZE(bytes) : " << FRAME_SIZE << endl;
   cout << "  MARK(ms)          : " << MARK << endl;

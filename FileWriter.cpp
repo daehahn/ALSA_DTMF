@@ -21,6 +21,7 @@ void FileWriter::run()
 	{
 		short *data = pool->pop();
 		fwrite((char*)data, sizeof(short), TONE_BUFFER_SIZE, file);
+    delete [] data;
 	}
         fclose(file);
 }

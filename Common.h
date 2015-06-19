@@ -5,8 +5,6 @@
 
 #define PI_2 			(2 * M_PI)
 #define SAMPLE_RATE 		48000
-#define LOWER_AMP  		15000
-#define HIGHER_AMP 		15000
 #define CHANNELS 		1
 #define FRAME_SIZE 		(sizeof(short) * CHANNELS)
 #define MARK 			100
@@ -36,6 +34,10 @@ public:
   static double coef_low[4];
   
   static double coef_high[4];
+
+  static double amp_low[4];
+
+  static double amp_high[4];
   
   static void generate_tone_buffer();
   static void copy_tone_buffer(int i, int j, short*buf);
