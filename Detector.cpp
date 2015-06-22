@@ -37,12 +37,11 @@ void Detector::run()
         double sum[8];
         double mean[8];
         double std[8];
-/*
+
         FILE* mag_file = fopen("mag.txt", "w");
         FILE* dmag_file = fopen("dmag.txt", "w");
-        FILE* mean_file = fopen("mean.txt", "w");
-        FILE* std_file = fopen("std.txt", "w");
-*/
+        FILE* tone_file = fopen("tone.txt", "w");
+
         for(int i = 0; i < 8; i++) {
           sum[i] = 0;
         }
@@ -74,13 +73,10 @@ void Detector::run()
               dmag[i][mag_index] = ddf;
               tone_on[i][mag_index] = dmag[i][before] > 0.0001 && dmag[i][after] < -0.0001 ? 1 : 0;
 
-/*
 	      fprintf(mag_file, "%s %g", i == 0 ? "" : ", ", mag[i][mag_index]);
 	      fprintf(dmag_file, "%s %g", i == 0 ? "" : ", ", dmag[i][mag_index]);
-	      fprintf(mean_file, "%s %g", i == 0 ? "" : ", ", mean[i]);
-	      fprintf(std_file, "%s %g", i == 0 ? "" : ", ", std[i]);
-*/
-              //cout << (i == 0 ? "" : " ") << mag[i][mag_index];
+	      fprintf(tone_file, "%s %d", i == 0 ? "" : ", ", tone_on[i][mag_index]);
+              cout << (i == 0 ? "" : " ") << mag[i][mag_index];
 	      //cout << (i == 0 ? "" : ", ") << ddf;
 
             }
@@ -91,24 +87,20 @@ void Detector::run()
 	      double ddf = -1 * mag[i+4][before] + mag[i+4][after];
               dmag[i+4][mag_index] = ddf;
               tone_on[i+4][mag_index] = dmag[i+4][before] > 0.0001 && dmag[i+4][after] < -0.0001 ? 1 : 0;
-/*
+
 	      fprintf(mag_file, "%s %g", ", ", mag[i+4][mag_index]);
 	      fprintf(dmag_file, "%s %g", ", ", dmag[i+4][mag_index]);
-              fprintf(mean_file, "%s %g", ", ", mean[i+4]);
-	      fprintf(std_file, "%s %g", ", ", std[i+4]);
-  */          
+              fprintf(tone_file, "%s %d", ", ", tone_on[i+4][mag_index]);
 	      //cout << ", " << ddf;
 
-              //cout << " " << mag[i+4][mag_index];
+              cout << " " << mag[i+4][mag_index];
             }
-/*
+
             fprintf(mag_file, "\n");
             fprintf(dmag_file, "\n");
-            fprintf(mean_file, "\n");
-            fprintf(std_file, "\n");
-*/
+            fprintf(tone_file, "\n");
             
-            //cout << endl;
+            cout << endl;
 
             int prev = (mag_index >= 1 ? mag_index-1 : ON_SAMPLES-1);
  
@@ -135,10 +127,12 @@ void Detector::run()
             if(low_index.size() == 1 && high_index.size() == 1) {
               x = low_index[0];
               y = high_index[0] - 4;
-            } else if(low_index.size() == 1 && high_index_prev.size() == 1) {
+            } else if(low_index.size() == 1 && high_index_prev.size() == 1
+		      && high_index.size() == 0) {
               x = low_index[0];
               y = high_index_prev[0] - 4;
-            } else if(low_index_prev.size() == 1 && high_index.size() == 1) {
+            } else if(low_index_prev.size() == 1 && high_index.size() == 1
+                      && low_index.size() == 0) {
               x = low_index_prev[0];
               y = high_index[0] - 4;
             }
@@ -146,7 +140,7 @@ void Detector::run()
             if(x != -1 && y != -1) {
               //printf("off_count: %d\n", off_count);
               //printf("on\n");
-              if(off_count >= 3) {
+              if(off_count >= 4) {
                 mtx.lock();
                 unsigned char c = (unsigned char)(4*x + y);
                 message.push_back(c);
@@ -208,7 +202,7 @@ double Detector::goertzel(TwoBuffer &buf, double coef, int x, int length) {
   double q0, q1, q2;
   q0 = q1 = q2 = 0;
 
-  double scale = length;
+  double scale = length / 4.0;
 
   double min = 100000;
   double max = -100000;
@@ -221,10 +215,11 @@ double Detector::goertzel(TwoBuffer &buf, double coef, int x, int length) {
   }
 
   for(int i = x; i < x + length; i++) {
-    q0 = ((buf.get(i*CHANNELS) - min) / (max - min)) + (coef * q1) - q2;
+    //q0 = ((buf.get(i*CHANNELS) - min) / (max - min)) + (coef * q1) - q2;
+    q0 = ((buf.get(i*CHANNELS) / 16384.0)) + (coef * q1) - q2;
     q2 = q1;
     q1 = q0;
   }
 
-  return ((q1*q1 + q2*q2 - q1*q2*coef) / (scale*scale)) * 66.6;
+  return ((q1*q1 + q2*q2 - q1*q2*coef) / (scale*scale));
 }

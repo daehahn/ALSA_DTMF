@@ -113,6 +113,7 @@ void Common::init() {
   higher_freq[2] = 1477;
   higher_freq[3] = 1633;
   */
+/*
   lower_freq[0] = 16000;
   lower_freq[1] = 16500;
   lower_freq[2] = 17000;
@@ -122,18 +123,33 @@ void Common::init() {
   higher_freq[1] = 18500;
   higher_freq[2] = 19000;
   higher_freq[3] = 19500;
+*/
+
+
+  lower_freq[0] = 15000;
+  lower_freq[1] = 15250;
+  lower_freq[2] = 15500;
+  lower_freq[3] = 15750;
+
+  higher_freq[0] = 16000;
+  higher_freq[1] = 16250;
+  higher_freq[2] = 16500;
+  higher_freq[3] = 16750;
+
+
 
 /*
-  amp_low[0] = 2200;
-  amp_low[1] = 6500;
-  amp_low[2] = 7000;
-  amp_low[3] = 15000;
+  amp_low[0] = 12000;
+  amp_low[1] = 12000;
+  amp_low[2] = 13000;
+  amp_low[3] = 16000;
   
-  amp_high[0] = 8500;
-  amp_high[1] = 14500;
-  amp_high[2] = 15700;
+  amp_high[0] = 14500;
+  amp_high[1] = 14000;
+  amp_high[2] = 16000;
   amp_high[3] = 16000;
 */
+
   amp_low[0] = 15000;
   amp_low[1] = 15000;
   amp_low[2] = 15000;
@@ -143,6 +159,7 @@ void Common::init() {
   amp_high[1] = 15000;
   amp_high[2] = 15000;
   amp_high[3] = 15000;
+
 
   for(int i = 0; i < 4; i++) {
     theta_lower[i]  = (PI_2 / SAMPLE_RATE) *  lower_freq[i];
@@ -183,6 +200,22 @@ void Common::log() {
 			  << theta_higher[2] << endl;
   cout << "  theta_higher[" << higher_freq[3] << "]: " 
 			  << theta_higher[3] << endl;
+  cout << "  coef_low[" << lower_freq[0] << "]: " 
+			  << coef_low[0] << endl;
+  cout << "  coef_low[" << lower_freq[1] << "]: " 
+			  << coef_low[1] << endl;
+  cout << "  coef_low[" << lower_freq[2] << "]: " 
+			  << coef_low[2] << endl;
+  cout << "  coef_low[" << lower_freq[3] << "]: " 
+			  << coef_low[3] << endl;
+  cout << "  coef_high[" << higher_freq[0] << "]: " 
+			  << coef_high[0] << endl;
+  cout << "  coef_high[" << higher_freq[1] << "]: " 
+			  << coef_high[1] << endl;
+  cout << "  coef_high[" << higher_freq[2] << "]: " 
+			  << coef_high[2] << endl;
+  cout << "  coef_high[" << higher_freq[3] << "]: " 
+			  << coef_high[3] << endl;
 
   cout << endl;
 }

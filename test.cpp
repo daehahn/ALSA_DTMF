@@ -27,6 +27,7 @@ int main()
 
 
   double max[nFreq] = { 0 };
+  RingBuffer<double, dist*length*10> maxBuffer[nFreq];
   
 
   //FILE *f = fopen("mag2.txt", "r");
@@ -38,6 +39,7 @@ int main()
     buffer.add(mag); 
     if(mag > max[p])
       max[p] = mag;
+    maxBuffer[p].add(mag);
     p = (p + 1) % nFreq;
 
     //-- after each row (at each cycle)
@@ -51,13 +53,18 @@ int main()
         for(int f=0; f<nFreq; f++)
         {
           int p = (dist * j) * nFreq + f;
-          sum += buffer[p] / max[nFreq-1-f];
+          //sum += buffer[p] / max[nFreq-1-f];
+          double maxFromBuffer = 0;
+          for(int i=0;i<maxBuffer[nFreq-1-f].getNumberOfEntries(); i++)
+            if(maxFromBuffer < maxBuffer[nFreq-1-f][i])
+              maxFromBuffer = maxBuffer[nFreq-1-f][i];
+          sum += buffer[p] / maxFromBuffer;
         }
       buffer2.add(sum);
 
       //-- search for 5 peaks (the tip of the triangle)
       const int peaks = 5;
-      if(buffer2.getNumberOfEntries() > dist * (peaks-1) + 1)
+      if(buffer2.getNumberOfEntries() > peaks/2 * dist + 2 + dist*(length-1) )
       {
         double v[peaks];
         for(int i=0; i<peaks; i++)
@@ -79,7 +86,8 @@ int main()
 
         //printf("%lf\n", confidence);
 
-        if(buffer3[1] > buffer3[0] && buffer3[1] > buffer3[2] && buffer3[1] > 1.0)
+        bool failed = false;
+        if(buffer3[1] > buffer3[0] && buffer3[1] > buffer3[2] && buffer3[1] > 0.5)
         {
           int startPos = peaks/2 * dist + 2 + dist*(length-1);
           printf("message position %d\n", t - startPos);
@@ -107,19 +115,25 @@ int main()
             //printf("%d %d   %lf %lf \n", index1, index2, max1, max2);
             
             if((index1 < nFreq/2) == (index2 < nFreq/2))
+            {
               fprintf(stderr, "error!\n");
+              failed = true;
+            }
 
 
             int row = std::min(index1, index2);
             int col = std::max(index1, index2) - (nFreq/2);
             int tone = (row << 2) | col; 
-            printf("tone %d\n", tone);
+            //printf("tone %d\n", tone);
             
             data[i/2] |= tone << (((i+1) & 1) * 4);
           }
-          printf("%s\n", data);
+          if(!failed)
+            fprintf(stderr, "%s\n", data);
         }
-      }      
+      }
+      else
+        printf("0\n");      
     }
   }
   //fclose(f);

@@ -7,8 +7,8 @@
 #define SAMPLE_RATE 		48000
 #define CHANNELS 		1
 #define FRAME_SIZE 		(sizeof(short) * CHANNELS)
-#define MARK 			60
-#define SPACE 			60
+#define MARK 			100
+#define SPACE 			100
 #define NUM_MARK_SAMPLES 	((int)((MARK / 1000.0) * SAMPLE_RATE))
 #define NUM_SPACE_SAMPLES 	((int)((SPACE / 1000.0) * SAMPLE_RATE))
 #define FILTER_WIDTH 		(NUM_MARK_SAMPLES >> 1)
