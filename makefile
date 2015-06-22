@@ -1,4 +1,4 @@
-CFLAGS = -g -I. -std=c++11 -m32 -L/home/kyle/PhD/Robotics/robocanes/lib/linux32/
+CFLAGS = -g -I. -std=c++11 -m32 -L/home/joe/robocup/trunk/lib/linux32/
 #CFLAGS = -g -I. -std=c++11
 COMPILE = g++ $(CFLAGS) -c
 LINK = g++ $(CFLAGS)
@@ -35,6 +35,9 @@ main.o: main.cpp Pool.h Reader.h Detector.h Mutex.h Thread.h
 
 main: Thread.o Mutex.o Common.o Reader.o AlsaReader.o FileWriter.o AlsaWriter.o Detector.o main.o
 	$(LINK) main.o Thread.o Mutex.o Common.o Reader.o AlsaReader.o FileWriter.o AlsaWriter.o Detector.o $(LIBS) -o main
+
+test: test.cpp RingBuffer.h
+	$(LINK) test.cpp -o test
 
 clean : 
 	rm -f main *.o *~

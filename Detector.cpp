@@ -33,10 +33,11 @@ void Detector::run()
 
         double mag[8][ON_SAMPLES];
         double dmag[8][ON_SAMPLES];
+        int tone_on[8][ON_SAMPLES];
         double sum[8];
         double mean[8];
         double std[8];
-/* 
+/*
         FILE* mag_file = fopen("mag.txt", "w");
         FILE* dmag_file = fopen("dmag.txt", "w");
         FILE* mean_file = fopen("mean.txt", "w");
@@ -49,6 +50,8 @@ void Detector::run()
         for(int i = 0; i < 8; i++) {
           for(int j = 0; j < ON_SAMPLES; j++) {
             mag[i][j] = 0;
+            dmag[i][j] = 0;
+            tone_on[i][j] = 0;
           }
         }
 
@@ -60,11 +63,8 @@ void Detector::run()
           while(index < TONE_BUFFER_SIZE) {
  
             int before = (mag_index < 2 ? ON_SAMPLES - 2 : mag_index-2);
-            //int after = (mag_index < 1 ? ON_SAMPLES - 1 : mag_index-1);
             int after = mag_index;
 
-            int two_before = (mag_index < 3 ? ON_SAMPLES - 3 : mag_index - 3);
-            int two_after  = (mag_index < 1 ? ON_SAMPLES - 1 : mag_index - 1);
 
             for(int i = 0; i < 4; i++) {
               mag[i][mag_index] = goertzel(buf, Common::coef_low[i], 
@@ -72,13 +72,15 @@ void Detector::run()
 		
 	      double ddf = -1 * mag[i][before] + mag[i][after];
               dmag[i][mag_index] = ddf;
+              tone_on[i][mag_index] = dmag[i][before] > 0.0001 && dmag[i][after] < -0.0001 ? 1 : 0;
 
-
-	      //fprintf(mag_file, "%s %g", i == 0 ? "" : ", ", mag[i][mag_index]);
-	      //fprintf(dmag_file, "%s %g", i == 0 ? "" : ", ", dmag[i][mag_index]);
-	      //fprintf(mean_file, "%s %g", i == 0 ? "" : ", ", mean[i]);
-	      //fprintf(std_file, "%s %g", i == 0 ? "" : ", ", std[i]);
-              //cout << (i == 0 ? "" : ", ") << mag[i][mag_index];
+/*
+	      fprintf(mag_file, "%s %g", i == 0 ? "" : ", ", mag[i][mag_index]);
+	      fprintf(dmag_file, "%s %g", i == 0 ? "" : ", ", dmag[i][mag_index]);
+	      fprintf(mean_file, "%s %g", i == 0 ? "" : ", ", mean[i]);
+	      fprintf(std_file, "%s %g", i == 0 ? "" : ", ", std[i]);
+*/
+              //cout << (i == 0 ? "" : " ") << mag[i][mag_index];
 	      //cout << (i == 0 ? "" : ", ") << ddf;
 
             }
@@ -88,69 +90,65 @@ void Detector::run()
 		
 	      double ddf = -1 * mag[i+4][before] + mag[i+4][after];
               dmag[i+4][mag_index] = ddf;
-
-	      //fprintf(mag_file, "%s %g", ", ", mag[i+4][mag_index]);
-	      //fprintf(dmag_file, "%s %g", ", ", dmag[i+4][mag_index]);
-              //fprintf(mean_file, "%s %g", ", ", mean[i+4]);
-	      //fprintf(std_file, "%s %g", ", ", std[i+4]);
-            
+              tone_on[i+4][mag_index] = dmag[i+4][before] > 0.0001 && dmag[i+4][after] < -0.0001 ? 1 : 0;
+/*
+	      fprintf(mag_file, "%s %g", ", ", mag[i+4][mag_index]);
+	      fprintf(dmag_file, "%s %g", ", ", dmag[i+4][mag_index]);
+              fprintf(mean_file, "%s %g", ", ", mean[i+4]);
+	      fprintf(std_file, "%s %g", ", ", std[i+4]);
+  */          
 	      //cout << ", " << ddf;
 
-              //cout << ", " << mag[i+4][mag_index];
+              //cout << " " << mag[i+4][mag_index];
             }
-
-            //fprintf(mag_file, "\n");
-            //fprintf(dmag_file, "\n");
-            //fprintf(mean_file, "\n");
-            //fprintf(std_file, "\n");
-
+/*
+            fprintf(mag_file, "\n");
+            fprintf(dmag_file, "\n");
+            fprintf(mean_file, "\n");
+            fprintf(std_file, "\n");
+*/
             
+            //cout << endl;
+
+            int prev = (mag_index >= 1 ? mag_index-1 : ON_SAMPLES-1);
+ 
+            vector<int> low_index_prev;
+            vector<int> high_index_prev;
             vector<int> low_index;
             vector<int> high_index;
 
             for(int i = 0; i < 4; i++) {
-              if((dmag[i][before] > 0.0001 && dmag[i][after] < -0.0001) ||
-		 (dmag[i][before]  > 0.0001 && dmag[i][two_after] < -0.0001) ||
-		 (dmag[i][two_before]  > 0.0001 && dmag[i][after] < -0.0001)) {
-		low_index.push_back(i);
-		//cout << (i == 0 ? "" : ", ") << 1;
-              } else {
-                //cout << (i == 0 ? "" : ", ") << 0;
-              }
+              if(tone_on[i][prev] == 1) low_index_prev.push_back(i);
+              if(tone_on[i][mag_index] == 1) low_index.push_back(i);
             }
 
             for(int i = 4; i < 8; i++) {
-              if((dmag[i][before] > 0.0001 && dmag[i][after] < -0.0001) ||
-		 (dmag[i][before]  > 0.0001 && dmag[i][two_after] < -0.0001) ||
-		 (dmag[i][two_before]  > 0.0001 && dmag[i][after] < -0.0001)) {
-		high_index.push_back(i-4);
-                //cout << ", " << 1;
-              } else {
-                //cout << ", " << 0;
-              }
+              if(tone_on[i][prev] == 1) high_index_prev.push_back(i);
+              if(tone_on[i][mag_index] == 1) high_index.push_back(i);
             }
-/*
-            //update sum, mean, std
-            for(int i = 0; i < 8; i++) {
-              sum[i] += mag[i][mag_index];
-              mean[i] = sum[i] / ON_SAMPLES;
-              double std_sum = 0;
-	      for(int j = 0; j < ON_SAMPLES; j++) {
-                double v = mag[i][j] - mean[i];
-                std_sum += v*v;
-              }
-              std[i] = sqrt(std_sum / ON_SAMPLES);
-            } 
-*/
 
             //cout << endl;
 
+            int x = -1;
+            int y = -1;
+
             if(low_index.size() == 1 && high_index.size() == 1) {
+              x = low_index[0];
+              y = high_index[0] - 4;
+            } else if(low_index.size() == 1 && high_index_prev.size() == 1) {
+              x = low_index[0];
+              y = high_index_prev[0] - 4;
+            } else if(low_index_prev.size() == 1 && high_index.size() == 1) {
+              x = low_index_prev[0];
+              y = high_index[0] - 4;
+            }
+
+            if(x != -1 && y != -1) {
               //printf("off_count: %d\n", off_count);
               //printf("on\n");
-              if(off_count >= 4) {
+              if(off_count >= 3) {
                 mtx.lock();
-                unsigned char c = (unsigned char)(4*low_index[0] + high_index[0]);
+                unsigned char c = (unsigned char)(4*x + y);
                 message.push_back(c);
                 //cout << "Detected " << Common::code_to_char[CODE_TO_CHAR(low_index[0], high_index[0])] << endl;
                 mtx.unlock();
@@ -171,12 +169,13 @@ void Detector::run()
               //sum[i] -= mag[i][(mag_index+1)%ON_SAMPLES];
             //}
             mag_index = (mag_index + 1) % ON_SAMPLES;
+            //printf("mag index: %d\n", mag_index);
 
           }
 
 	  if(items_consumed >= num_items) {
-	    printf("items consumed: %d\n", items_consumed);
-            printf("num items: %d\n", num_items);
+	    //printf("items consumed: %d\n", items_consumed);
+            //printf("num items: %d\n", num_items);
             printf("message size: %d characters\n", message.size() / 2);
 
             for(int i = 0; i < message.size(); i += 2) {
@@ -184,6 +183,13 @@ void Detector::run()
               cout << c;
             }
             cout << endl;
+
+           
+            //fclose(mag_file);
+            //fclose(dmag_file);
+            //fclose(mean_file);
+            //fclose(std_file);
+
             return;
           }
 
