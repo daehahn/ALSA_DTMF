@@ -37,6 +37,11 @@ void Common::generate_tone_buffer() {
         tone_buffer[i][j][k] +=
           (short)(amp_high[j] * sin(2 * M_PI * ((x * f2) / SAMPLE_RATE)));
 
+        float distance_left = NUM_MARK_SAMPLES * CHANNELS - k;
+        float fade = (distance_left > FADE_LENGTH * CHANNELS) ? 1 : distance_left / FADE_LENGTH * CHANNELS;
+        tone_buffer[i][j][k] *= fade * fade;
+
+
         for(l = k + 1; l < k + CHANNELS; l++) {
           tone_buffer[i][j][l] = tone_buffer[i][j][k];
         }

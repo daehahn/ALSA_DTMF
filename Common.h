@@ -9,6 +9,7 @@
 #define FRAME_SIZE 		(sizeof(short) * CHANNELS)
 #define MARK 			100
 #define SPACE 			100
+#define FADE_LENGTH 10
 #define NUM_MARK_SAMPLES 	((int)((MARK / 1000.0) * SAMPLE_RATE))
 #define NUM_SPACE_SAMPLES 	((int)((SPACE / 1000.0) * SAMPLE_RATE))
 #define FILTER_WIDTH 		(NUM_MARK_SAMPLES >> 1)

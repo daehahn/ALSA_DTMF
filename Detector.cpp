@@ -170,7 +170,7 @@ void Detector::run()
 	  if(items_consumed >= num_items) {
 	    //printf("items consumed: %d\n", items_consumed);
             //printf("num items: %d\n", num_items);
-            printf("message size: %d characters\n", message.size() / 2);
+            printf("message size: %lu characters\n", message.size() / 2);
 
             for(int i = 0; i < message.size(); i += 2) {
               unsigned char c = (unsigned char)(((message[i] << 4) & 0xF0) 						  | (message[i+1] & 0x0F));
