@@ -55,7 +55,7 @@ void Detector::run()
         }
 
         int mag_index = 0;
-        int off_count = 0;
+        int off_count = 5;
 
         while(true) {
 
@@ -76,7 +76,7 @@ void Detector::run()
 	      fprintf(mag_file, "%s %g", i == 0 ? "" : ", ", mag[i][mag_index]);
 	      fprintf(dmag_file, "%s %g", i == 0 ? "" : ", ", dmag[i][mag_index]);
 	      fprintf(tone_file, "%s %d", i == 0 ? "" : ", ", tone_on[i][mag_index]);
-              cout << (i == 0 ? "" : " ") << mag[i][mag_index];
+              //cout << (i == 0 ? "" : " ") << mag[i][mag_index];
 	      //cout << (i == 0 ? "" : ", ") << ddf;
 
             }
@@ -93,14 +93,14 @@ void Detector::run()
               fprintf(tone_file, "%s %d", ", ", tone_on[i+4][mag_index]);
 	      //cout << ", " << ddf;
 
-              cout << " " << mag[i+4][mag_index];
+              //cout << " " << mag[i+4][mag_index];
             }
 
             fprintf(mag_file, "\n");
             fprintf(dmag_file, "\n");
             fprintf(tone_file, "\n");
             
-            cout << endl;
+            //cout << endl;
 
             int prev = (mag_index >= 1 ? mag_index-1 : ON_SAMPLES-1);
  
@@ -144,7 +144,7 @@ void Detector::run()
                 mtx.lock();
                 unsigned char c = (unsigned char)(4*x + y);
                 message.push_back(c);
-                //cout << "Detected " << Common::code_to_char[CODE_TO_CHAR(low_index[0], high_index[0])] << endl;
+                //cout << "Detected " << Common::code_to_char[CODE_TO_CHAR(x, y)] << endl;
                 mtx.unlock();
               }
               off_count = 0;
@@ -170,7 +170,7 @@ void Detector::run()
 	  if(items_consumed >= num_items) {
 	    //printf("items consumed: %d\n", items_consumed);
             //printf("num items: %d\n", num_items);
-            printf("message size: %lu characters\n", message.size() / 2);
+            printf("message size: %lu characters\n", message.size() / 2L);
 
             for(int i = 0; i < message.size(); i += 2) {
               unsigned char c = (unsigned char)(((message[i] << 4) & 0xF0) 						  | (message[i+1] & 0x0F));
@@ -179,9 +179,9 @@ void Detector::run()
             cout << endl;
 
            
-            //fclose(mag_file);
-            //fclose(dmag_file);
-            //fclose(mean_file);
+            fclose(mag_file);
+            fclose(dmag_file);
+            fclose(tone_file);
             //fclose(std_file);
 
             return;
@@ -202,7 +202,7 @@ double Detector::goertzel(TwoBuffer &buf, double coef, int x, int length) {
   double q0, q1, q2;
   q0 = q1 = q2 = 0;
 
-  double scale = length / 4.0;
+  double scale = length / 2.0;
 
   double min = 100000;
   double max = -100000;
